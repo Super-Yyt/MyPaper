@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业展示</title>
+
+    <!-- 引入 MDUI 样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui/dist/css/mdui.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 使用 column 布局来实现瀑布流 */
+        .assignment-container {
+            column-count: 3; /* 每行显示 3 列 */
+            column-gap: 20px; /* 列间距 */
+            padding: 20px;
+            max-width: 1200px; /* 最大宽度 */
+            margin: 0 auto; /* 居中 */
+        }
+
+        /* 每个作业卡片 */
+        .assignment-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background-color: white;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            break-inside: avoid-column; /* 防止卡片分裂到下一列 */
+        }
+
+        /* 作业标题样式 */
+        .assignment-item .mdui-card-primary-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0277bd;
+            text-align: center; /* 标题居中 */
+            padding: 10px;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+
+        /* 作业内容 */
+        .assignment-item .mdui-card-content {
+            font-size: 16px;
+            color: #666;
+            padding: 15px;
+            word-wrap: break-word;
+            background-color: #fff;
+        }
+
+        /* 如果没有作业，显示提示信息 */
+        .no-assignments {
+            text-align: center;
+            font-size: 20px;
+            color: #888;
+            padding: 40px 0;
+        }
+
+        /* "当天作业"标题样式，居中显示 */
+        .page-title {
+            text-align: center; /* 居中对齐 */
+            font-size: 32px;
+            font-weight: bold;
+            color: #0277bd;
+            margin-top: 20px; /* 顶部间距 */
+        }
+    </style>
+</head>
+<body class="mdui-theme-primary-blue mdui-theme-accent-light-blue">
+    <div class="mdui-container">
+        <!-- "当天作业"标题 -->
+        <h1 class="page-title">当天作业：</h1>
+
+        <!-- 作业项容器 -->
+        <div id="assignment-container" class="assignment-container">
+            <!-- 作业项将通过 JavaScript 动态添加 -->
+        </div>
+    </div>
+    <h5 class="page-title">制作：Qsn.me - zhaishis</h5>
+    <h5>记得安装并启用CORs Unblock浏览器插件！</h5>
+    <h6>开源地址:https://gitee.com/cmdsteam/Assignment-Pub</h6>
+    <!-- 引入 MDUI 的 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui/dist/js/mdui.min.js"></script>
+
+    <script>
+        // 设置请求头
+        var myHeaders = new Headers();
+        myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+        myHeaders.append("Accept", "*/*");
+        myHeaders.append("Host", "{domain}");
+        myHeaders.append("Connection", "keep-alive");
+
+        // 设置请求选项
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        // 请求API并更新页面内容的函数
+        function fetchAssignments() {
+            fetch("https://{domain}/api/v1/get_assignment.php?class_token={token}", requestOptions)
+                .then(response => response.json())  // 直接解析为 JSON
+                .then(result => {
+                    console.log(result); // 查看返回的数据结构
+                    const assignments = result.assignments || [];
+                    const container = document.getElementById('assignment-container');
+                    
+                    // 清空现有作业项
+                    container.innerHTML = '';
+
+                    // 确保作业容器存在
+                    if (!container) {
+                        console.error("作业容器未找到");
+                        return;
+                    }
+
+                    if (assignments.length === 0) {
+                        const noAssignments = document.createElement('div');
+                        noAssignments.classList.add('no-assignments');
+                        noAssignments.textContent = "暂无作业";
+                        container.appendChild(noAssignments);
+                    }
+
+                    assignments.forEach(assignment => {
+                        // 创建作业项并应用 MDUI 卡片样式
+                        const assignmentItem = document.createElement('div');
+                        assignmentItem.classList.add('assignment-item', 'mdui-card');
+
+                        // 添加作业科目
+                        const subject = document.createElement('div');
+                        subject.classList.add('mdui-card-primary-title');
+                        subject.textContent = assignment.subject || "无科目";
+                        assignmentItem.appendChild(subject);
+
+                        // 添加作业内容
+                        const assignmentText = document.createElement('div');
+                        assignmentText.classList.add('mdui-card-content');
+                        assignmentText.innerHTML = (assignment.assignment_text || "无作业内容").replace(/\r?\n/g, '<br>');
+                        assignmentItem.appendChild(assignmentText);
+
+                        // 将作业项添加到作业容器中
+                        container.appendChild(assignmentItem);
+                    });
+                })
+                .catch(error => {
+                    console.log('请求失败:', error);
+                });
+        }
+
+        // 页面加载后立即请求一次
+        fetchAssignments();
+
+        // 设置每分钟请求一次
+        setInterval(fetchAssignments, 6);
+    </script>
+</body>
+</html>

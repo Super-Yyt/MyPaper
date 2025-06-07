@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师注册与登录</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@0.4.3/dist/css/mdui.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mdui@0.4.3/dist/js/mdui.min.js"></script>
+    <style>
+        .mdui-container {
+            max-width: 500px;
+            margin-top: 50px;
+        }
+        .mdui-card {
+            padding: 20px;
+        }
+        .mdui-btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
+    <div class="mdui-container">
+        <div class="mdui-card" id="login-form">
+            <h3 class="mdui-text-center">登录</h3>
+            <form id="login" action="login.php" method="POST">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">邮箱</label>
+                    <input class="mdui-textfield-input" type="email" name="qq_email" required/>
+                </div>
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">密码</label>
+                    <input class="mdui-textfield-input" type="password" name="password" required/>
+                </div>
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme" type="submit">登录</button>
+                <p class="mdui-text-center">没有账号？<a href="javascript:void(0);" onclick="toggleForm();">立即注册</a></p>
+                <p class="mdui-text-center">已经登陆?<a href="panel.php">进入</a></p>
+    
+            </form>
+        </div>
+
+        <div class="mdui-card" id="register-form" style="display: none;">
+            <h3 class="mdui-text-center">注册</h3>
+            <form id="register" action="register.php" method="POST">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">教师名</label>
+                    <input class="mdui-textfield-input" type="text" name="username" required/>
+                </div>
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">邮箱</label>
+                    <input class="mdui-textfield-input" type="email" name="qq_email" required/>
+                </div>
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">密码</label>
+                    <input class="mdui-textfield-input" type="password" name="password" required/>
+                </div>
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">确认密码</label>
+                    <input class="mdui-textfield-input" type="password" name="confirm_password" required/>
+                </div>
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme" type="submit">注册</button>
+                <p class="mdui-text-center">已有账号？<a href="javascript:void(0);" onclick="toggleForm();">立即登录</a></p>
+                <p class="mdui-text-center">仅限QQ邮箱注册</p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            var loginForm = document.getElementById('login-form');
+            var registerForm = document.getElementById('register-form');
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
