@@ -1,4 +1,9 @@
+# MyPaper
+
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
+
 注意几点:
+
 1.panel.php的$key = '{你的密钥}';这一行把{你的密钥}换成实际密钥并且和login.php的一起换了,两者要求一模一样
 如$key = '1234567890';
 
